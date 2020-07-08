@@ -1,0 +1,32 @@
+did the calcs
+from strides to frames to fps to px 
+which gave a number (real) which multiplied by a multiplier
+gave the movemnet speed
+
+
+
+did calcs for megaman (3 frame)
+	slow, but animation looked like it made sense
+	changed (real), but still looked ok? maybe cuz too simple
+
+
+without changing any nums, same for samus (10)
+	even slower, but animation still made sense <- this was tinkered real, 0.75 not 0.43
+	0.43 (megaReal) looked on the edge of okay/not okay. now it seemed too slow
+	to the point where the anim didnt make sense anymore
+	
+	
+	samusReal (0.37) looks okay..till the end. rounding erros?
+	math erros?
+	arrows?
+	doubling to 0.75 looks gud
+	
+	
+guess what im a dumbass :)
+
+update was tiedu p with animupdate so big boo
+
+now it looks okay..but how mult work now
+	
+
+
