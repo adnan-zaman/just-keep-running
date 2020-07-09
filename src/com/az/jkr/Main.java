@@ -73,8 +73,7 @@ public class Main extends Canvas{
 		levelLoader = new LevelLoader();
 		addKeyListener(inputHandler);
 		state = GameState.MainMenu;
-		level = 0;
-		gameObjectHandler.addMenu(new MainMenu());
+		changeLevel(0);
 		
 		
 		//good to go
@@ -82,7 +81,7 @@ public class Main extends Canvas{
 		frame.setVisible(true);
 	
 		
-		//levelLoader.loadLevel(Level.one);
+		
 		run(); 
 		
 	}
@@ -92,18 +91,14 @@ public class Main extends Canvas{
 		new Main();
 
 	}
-
-	public static void changeState(GameState gs)
+	
+	public static void changeLevel(int lvl)
 	{
-		if (gs == GameState.Game && state == GameState.MainMenu)
-		{
-			gameObjectHandler.clearAll();
-			level = 1;
-			levelLoader.loadLevel(1);
-		}
-		
-		state = gs;
+		level = lvl;
+		levelLoader.loadLevel(lvl);
 	}
+
+	
 	
 	public void run()
 	{
@@ -174,7 +169,7 @@ public class Main extends Canvas{
 	 */
 	public void tick()
 	{
-		if (state != GameState.Game)
+		if (level == 0)
 			camera.followingPlayer = false;
 		else
 			camera.followingPlayer = true;
@@ -214,7 +209,7 @@ public class Main extends Canvas{
 			
 		Graphics2D g2 = (Graphics2D)bs.getDrawGraphics();
 	
-		if (state == GameState.Game)
+		if (level != 0)
 		{
 			g2.setColor(Color.black);
 			g2.fillRect(0, 0, width, height);			

@@ -10,6 +10,14 @@ public class LevelLoader {
 	
 	public void loadLevel(int level)
 	{	
+		Main.gameObjectHandler.clearAll();
+		
+		//main menu
+		if (level == 0)
+		{
+			Main.gameObjectHandler.addMenu(new MainMenu());
+		}
+		
 		if (level == 1)
 		{
 			try
