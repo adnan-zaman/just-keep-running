@@ -9,5 +9,6 @@ package com.az.jkr;
 public enum ID {
 	
 	Player,
-	Wall
+	Wall,
+	UI,
 }

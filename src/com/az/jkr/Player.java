@@ -104,7 +104,10 @@ public class Player extends MovingGameObject {
 		
 		//also offset by collisionOffset since colliders are always slightly in ground to maintain collision
 		Main.camera.drawSprite(g2, getAnimator().getSprite(), 
-			getX()-getSpriteWidth()/2, getY()-getSpriteHeight()/2 - spriteDelta - CollisionHandler.collisionOffset, getForwardX() == -1 );
+			getX()-getSpriteWidth()/2, 
+			getY()-getSpriteHeight()/2 - spriteDelta - CollisionHandler.collisionOffset, 
+			getForwardX() == -1,
+			false);
 		
 		
 	}
@@ -137,9 +140,9 @@ public class Player extends MovingGameObject {
 		g2.setColor(Color.white);
 		g2.setColor(getColor());
 		g2.setColor(Color.green);
-		Main.camera.drawRect(g2, (Rectangle)getCollider());
+		Main.camera.drawRect(g2, (Rectangle)getCollider(),false);
 		g2.setColor(Color.white);
-		Main.camera.drawRect(g2, new Rectangle((int)getX()-1,(int)getY(),3,3));
+		Main.camera.drawRect(g2, new Rectangle((int)getX()-1,(int)getY(),3,3),false);
 //		Main.camera.drawString(g2,"(" + left + "," + right +")", (int)(getX() + getWidth()/2 + 10), (int)getY());
 		Main.camera.drawString(g2,"onWall: " + isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
 		Main.camera.drawString(g2,"onGround: " + isOnGround(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 20);

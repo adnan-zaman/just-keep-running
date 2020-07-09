@@ -9,7 +9,7 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
-import com.az.jkr.LevelLoader.Level;
+
 
 
 /**
@@ -41,9 +41,12 @@ public class Main extends Canvas{
 	public static LevelLoader levelLoader;
 	//current state of the game
 	public static GameState state;
+	//current level
+	public static int level;
 	//for debugging, used with camera
 	public static int FPS;
-
+	
+	
 	//is game running
 	private boolean playing;
 	
@@ -69,8 +72,9 @@ public class Main extends Canvas{
 		camera = new Camera(width/2,height/2);
 		levelLoader = new LevelLoader();
 		addKeyListener(inputHandler);
-		state = GameState.Game;
-		
+		state = GameState.MainMenu;
+		level = 0;
+		gameObjectHandler.addMenu(new MainMenu());
 		
 		
 		//good to go
@@ -78,7 +82,7 @@ public class Main extends Canvas{
 		frame.setVisible(true);
 	
 		
-		levelLoader.loadLevel(Level.one);
+		//levelLoader.loadLevel(Level.one);
 		run(); 
 		
 	}
@@ -89,6 +93,17 @@ public class Main extends Canvas{
 
 	}
 
+	public static void changeState(GameState gs)
+	{
+		if (gs == GameState.Game && state == GameState.MainMenu)
+		{
+			gameObjectHandler.clearAll();
+			level = 1;
+			levelLoader.loadLevel(1);
+		}
+		
+		state = gs;
+	}
 	
 	public void run()
 	{
@@ -159,18 +174,21 @@ public class Main extends Canvas{
 	 */
 	public void tick()
 	{
-		if (state == GameState.Game)
-		{		
-			gameObjectHandler.tick();
-			//System.out.println("-all ticks done");
-			physics.applyGravity();
-			//System.out.println("-Grav done");
-			collisionHandler.checkCollisions();
-			//System.out.println("-collisions checked");
-			camera.tick();
-			//System.out.println("-camera ticked");
+		if (state != GameState.Game)
+			camera.followingPlayer = false;
+		else
+			camera.followingPlayer = true;
+		
+		gameObjectHandler.tick();
+		//System.out.println("-all ticks done");
+		physics.applyGravity();
+		//System.out.println("-Grav done");
+		collisionHandler.checkCollisions();
+		//System.out.println("-collisions checked");
+		camera.tick();
+		//System.out.println("-camera ticked");
 			
-		}
+	
 		
 	}
 	
@@ -199,10 +217,11 @@ public class Main extends Canvas{
 		if (state == GameState.Game)
 		{
 			g2.setColor(Color.black);
-			g2.fillRect(0, 0, width, height);
-			gameObjectHandler.render(g2,false);
-
+			g2.fillRect(0, 0, width, height);			
 		}
+		
+		gameObjectHandler.render(g2,false);
+
 		
 		//camera.showViewArea(g2);
 		
