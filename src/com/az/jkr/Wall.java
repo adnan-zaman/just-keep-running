@@ -38,7 +38,7 @@ public class Wall extends GameObject{
 	public void render(Graphics2D g2) {
 		g2.setColor(getColor());
 		//g2.draw(getCollider());
-		Main.camera.drawRect(g2, (Rectangle)getCollider());
+		Main.camera.drawRect(g2, (Rectangle)getCollider(),false);
 	}
 	
 	public void debugRender(Graphics2D g2)

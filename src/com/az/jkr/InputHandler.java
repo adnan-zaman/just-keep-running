@@ -20,7 +20,7 @@ public class InputHandler implements KeyListener{
 	//map from key -> pressed or not
 	private Map<String,Boolean> inputMap; 
 	
-	private final String[] validInputs = {"left","right","jump","down"};
+	private final String[] validInputs = {"left","right","jump","down","up"};
 	
 	public InputHandler()
 	{
@@ -55,6 +55,10 @@ public class InputHandler implements KeyListener{
 		if (e.getKeyCode() == left)
 		{
 			inputMap.put("left", true);
+		}
+		if (e.getKeyCode() == up)
+		{
+			inputMap.put("up", true);
 		}
 		if (e.getKeyCode() == down)
 		{
@@ -94,6 +98,10 @@ public class InputHandler implements KeyListener{
 		{
 			inputMap.put("left", false);
 		}
+		if (e.getKeyCode() == up)
+		{
+			inputMap.put("up", false);
+		}
 		if (e.getKeyCode() == down)
 		{
 			inputMap.put("down", false);
@@ -119,6 +127,7 @@ public class InputHandler implements KeyListener{
 	
 	public boolean isKeyDown(String key)
 	{
+		
 		return inputMap.get(key);
 	}
 	

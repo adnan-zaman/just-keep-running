@@ -19,12 +19,14 @@ public class GameObjectHandler {
 	public Player player;
 	
 	private LinkedList<GameObject> staticObjects;
-	private LinkedList<GameObject> dynamicObjects;	
+	private LinkedList<GameObject> dynamicObjects;
+	private LinkedList<Menu> menus;
 	
 	public GameObjectHandler()
 	{
 		staticObjects = new LinkedList<GameObject>();
 		dynamicObjects = new LinkedList<GameObject>();
+		menus = new LinkedList<Menu>();
 		player = null;
 	}
 	
@@ -42,6 +44,17 @@ public class GameObjectHandler {
 		if (player == null && go.getId() == ID.Player)
 			player = (Player)go;
 		return dynamicObjects.add(go);
+	}
+	
+	/**
+	 * Adds a menu to the handler
+	 * 
+	 * @param 	m 		the menu to add
+	 * @return 	true 	if add succeeds, false otherwise
+	 */
+	public boolean addMenu(Menu m)
+	{
+		return menus.add(m);
 	}
 	
 	/**
@@ -77,6 +90,8 @@ public class GameObjectHandler {
 			go.tick();
 		for (GameObject go : dynamicObjects)
 			go.tick();
+		for (Menu m : menus)
+			m.tick();
 		
 	}
 	
@@ -86,7 +101,8 @@ public class GameObjectHandler {
 			go.animTick();
 		for (GameObject go : dynamicObjects)
 			go.animTick();
-		
+		for (Menu m : menus)
+			m.animTick();
 	}
 	
 	/**
@@ -109,6 +125,9 @@ public class GameObjectHandler {
 			if (debug)
 				go.debugRender(g2);
 		}
+		
+		for (Menu m : menus)
+			m.render(g2);
 	}
 	
 	
@@ -157,10 +176,23 @@ public class GameObjectHandler {
 		return statObjs;
 	}
 	
+	/**
+	 * Remove all game objects 
+	 */
 	public void clear()
 	{
 		staticObjects = new LinkedList<GameObject>();
 		dynamicObjects = new LinkedList<GameObject>();
+	}
+	
+	/**
+	 * Remove all game objects and menus
+	 */
+	public void clearAll()
+	{
+		staticObjects = new LinkedList<GameObject>();
+		dynamicObjects = new LinkedList<GameObject>();
+		menus = new LinkedList<Menu>();
 	}
 	
 	

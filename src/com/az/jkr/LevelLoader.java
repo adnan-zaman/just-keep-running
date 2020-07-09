@@ -7,14 +7,10 @@ import java.io.FileReader;
 public class LevelLoader {
 
 	
-	public enum Level
-	{
-		one;
-	}
 	
-	public void loadLevel(Level l)
+	public void loadLevel(int level)
 	{	
-		if (l == Level.one)
+		if (level == 1)
 		{
 			try
 			{
