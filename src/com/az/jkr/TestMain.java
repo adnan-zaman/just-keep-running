@@ -10,12 +10,7 @@ public class TestMain {
 	}
 	public static void main(String[] args) {
 		
-		Object[] arr = {new Player(1,1), new Wall(2,2), new Wall(3,3)};
-		GameObject[] brr = (GameObject[])arr;
-		for (GameObject go : brr)
-		{
-			System.out.println(go.getId());
-		}
+		System.out.println(GameObject.lerp(99.5f, 0, .5f,false));
 
 	}
 

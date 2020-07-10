@@ -50,6 +50,8 @@ public class Main extends Canvas{
 	//is game running
 	private boolean playing;
 	
+	private static Transition currTransition;
+	
 
 	
 	public Main()
@@ -73,6 +75,7 @@ public class Main extends Canvas{
 		levelLoader = new LevelLoader();
 		addKeyListener(inputHandler);
 		state = GameState.MainMenu;
+		currTransition = null;
 		changeLevel(0);
 		
 		
@@ -92,10 +95,14 @@ public class Main extends Canvas{
 
 	}
 	
+	
 	public static void changeLevel(int lvl)
 	{
 		level = lvl;
+	
 		levelLoader.loadLevel(lvl);
+		if (lvl == 1)
+			currTransition = new FadeTransition(Color.black,2000,"in");
 	}
 
 	
@@ -174,14 +181,25 @@ public class Main extends Canvas{
 		else
 			camera.followingPlayer = true;
 		
-		gameObjectHandler.tick();
-		//System.out.println("-all ticks done");
-		physics.applyGravity();
-		//System.out.println("-Grav done");
-		collisionHandler.checkCollisions();
-		//System.out.println("-collisions checked");
-		camera.tick();
-		//System.out.println("-camera ticked");
+		if (true)
+		{
+			gameObjectHandler.tick();
+			//System.out.println("-all ticks done");
+			physics.applyGravity();
+			//System.out.println("-Grav done");
+			collisionHandler.checkCollisions();
+			//System.out.println("-collisions checked");
+			camera.tick();
+			//System.out.println("-camera ticked");
+		}
+		if (currTransition != null)
+		{
+			if (currTransition.isDone())
+				currTransition = null;
+			else
+				currTransition.tick();
+		}
+		
 			
 	
 		
@@ -209,16 +227,22 @@ public class Main extends Canvas{
 			
 		Graphics2D g2 = (Graphics2D)bs.getDrawGraphics();
 	
-		if (level != 0)
+		
+		
+		if (true)	
 		{
-			g2.setColor(Color.black);
-			g2.fillRect(0, 0, width, height);			
+			if (level != 0)
+			{
+				g2.setColor(Color.black);
+				g2.fillRect(0, 0, width, height);			
+			}
+			gameObjectHandler.render(g2,false);
 		}
+		if(currTransition != null)
+		{
+			currTransition.render(g2);
 		
-		gameObjectHandler.render(g2,false);
-
-		
-		//camera.showViewArea(g2);
+		}
 		
 		
 		bs.show();

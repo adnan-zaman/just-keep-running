@@ -173,6 +173,14 @@ public abstract class GameObject {
 		
 		return dir;
 	}
+	
+	public static float lerp (float a, float b, float step, boolean percent)
+	{
+		if (percent)
+			return a + ((b-a) * step);
+		else
+			return a + ((b-a)/Math.abs(b-a) * step);
+	}
 
 	/**
 	 * The game object's update method. Will be
