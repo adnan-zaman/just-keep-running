@@ -22,11 +22,18 @@ public class GameObjectHandler {
 	private LinkedList<GameObject> dynamicObjects;
 	private LinkedList<Menu> menus;
 	
+	private LinkedList<GameObject> tempStaticObjects;
+	private LinkedList<GameObject> tempDynamicObjects;
+	private LinkedList<Menu> tempMenus;
+	
 	public GameObjectHandler()
 	{
 		staticObjects = new LinkedList<GameObject>();
 		dynamicObjects = new LinkedList<GameObject>();
 		menus = new LinkedList<Menu>();
+		tempStaticObjects = new LinkedList<GameObject>();
+		tempDynamicObjects = new LinkedList<GameObject>();
+		tempMenus = new LinkedList<Menu>();
 		player = null;
 	}
 	
@@ -39,11 +46,11 @@ public class GameObjectHandler {
 	public boolean addGameObject(GameObject go)
 	{
 		if (go.isStatic)
-			return staticObjects.add(go);
+			return tempStaticObjects.add(go);
 		
 		if (player == null && go.getId() == ID.Player)
 			player = (Player)go;
-		return dynamicObjects.add(go);
+		return tempDynamicObjects.add(go);
 	}
 	
 	/**
@@ -54,7 +61,7 @@ public class GameObjectHandler {
 	 */
 	public boolean addMenu(Menu m)
 	{
-		return menus.add(m);
+		return tempMenus.add(m);
 	}
 	
 	/**
@@ -88,6 +95,10 @@ public class GameObjectHandler {
 	{
 		for (GameObject go : staticObjects)
 			go.tick();
+		for (int i = 0; i < staticObjects.size()/500; i++)
+		{
+			staticObjects.get(i).tick();
+		}
 		for (GameObject go : dynamicObjects)
 			go.tick();
 		for (Menu m : menus)
@@ -193,6 +204,17 @@ public class GameObjectHandler {
 		staticObjects = new LinkedList<GameObject>();
 		dynamicObjects = new LinkedList<GameObject>();
 		menus = new LinkedList<Menu>();
+	}
+	
+	public void finalize()
+	{
+		staticObjects = tempStaticObjects;
+		dynamicObjects = tempDynamicObjects;
+		menus = tempMenus;
+		
+		tempStaticObjects = new LinkedList<GameObject>();
+		tempDynamicObjects = new LinkedList<GameObject>();
+		tempMenus = new LinkedList<Menu>();
 	}
 	
 	

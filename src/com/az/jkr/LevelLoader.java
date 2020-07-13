@@ -8,17 +8,20 @@ public class LevelLoader {
 
 	
 	
-	public void loadLevel(int level)
+	public void loadLevel(GameState state)
 	{	
 		Main.gameObjectHandler.clearAll();
 		
 		//main menu
-		if (level == 0)
+		if (state == GameState.MainMenu)
 		{
 			Main.gameObjectHandler.addMenu(new MainMenu());
 		}
-		
-		if (level == 1)
+		if (state == GameState.LevelOneTitle)
+		{
+			Main.gameObjectHandler.addMenu(new TestMenu());
+		}
+		if (state == GameState.LevelOne)
 		{
 			try
 			{
@@ -67,6 +70,7 @@ public class LevelLoader {
 					y += 64;
 				}
 					br.close();
+				
 				
 			}
 			catch (Exception e)

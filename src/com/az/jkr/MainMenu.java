@@ -72,7 +72,7 @@ public class MainMenu extends Menu{
 	{
 		//play
 		if (currIndex == 1)
-			Main.changeLevel(1);
+			Main.changeState(GameState.LevelOneTitle);
 		//quit
 		if (currIndex == 2)
 			System.exit(0);

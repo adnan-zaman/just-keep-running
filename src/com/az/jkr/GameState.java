@@ -6,6 +6,8 @@ package com.az.jkr;
  */
 
 public enum GameState {
-	Game, //in-game 
-	MainMenu; //main menu
+	MainMenu, 
+	Controls,
+	LevelOneTitle,
+	LevelOne;
 }

@@ -20,6 +20,7 @@ public abstract class Transition {
 	{
 		bgColor = c;
 		totalTime = t;
+		done = false;
 	}
 	
 	

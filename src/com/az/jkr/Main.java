@@ -50,6 +50,7 @@ public class Main extends Canvas{
 	//is game running
 	private boolean playing;
 	
+	//current transition, if any
 	private static Transition currTransition;
 	
 
@@ -76,10 +77,12 @@ public class Main extends Canvas{
 		addKeyListener(inputHandler);
 		state = GameState.MainMenu;
 		currTransition = null;
-		changeLevel(0);
+		levelLoader.loadLevel(GameState.MainMenu);
+		gameObjectHandler.finalize();
 		
 		
 		//good to go
+		camera.followingPlayer = false;
 		playing = true;
 		frame.setVisible(true);
 	
@@ -100,9 +103,9 @@ public class Main extends Canvas{
 	{
 		level = lvl;
 	
-		levelLoader.loadLevel(lvl);
 		if (lvl == 1)
-			currTransition = new FadeTransition(Color.black,2000,"in");
+			changeState(GameState.LevelOneTitle);
+
 	}
 
 	
@@ -176,29 +179,42 @@ public class Main extends Canvas{
 	 */
 	public void tick()
 	{
-		if (level == 0)
-			camera.followingPlayer = false;
-		else
-			camera.followingPlayer = true;
+		gameObjectHandler.tick();
+		//System.out.println("-all ticks done");
+		physics.applyGravity();
+		//System.out.println("-Grav done");
+		collisionHandler.checkCollisions();
+		//System.out.println("-collisions checked");
+		camera.tick();
+		//System.out.println("-camera ticked");
 		
-		if (true)
+		//game state management
+		if (currTransition == null)
 		{
-			gameObjectHandler.tick();
-			//System.out.println("-all ticks done");
-			physics.applyGravity();
-			//System.out.println("-Grav done");
-			collisionHandler.checkCollisions();
-			//System.out.println("-collisions checked");
-			camera.tick();
-			//System.out.println("-camera ticked");
+			//transition to level one title done, waiting to enter level one
+			//start loading level one
+			if (state == GameState.LevelOneTitle)
+			{
+//				levelLoader.loadLevel(GameState.LevelOne);
+			}
+				
 		}
-		if (currTransition != null)
+		else
 		{
 			if (currTransition.isDone())
+			{
+				gameObjectHandler.finalize();
+				System.out.println(gameObjectHandler.size());
 				currTransition = null;
+				if (state == GameState.LevelOne)
+					camera.followingPlayer = true;
+			}
 			else
+			{
 				currTransition.tick();
+			}			
 		}
+		
 		
 			
 	
@@ -229,20 +245,18 @@ public class Main extends Canvas{
 	
 		
 		
-		if (true)	
+		
+		if (state == GameState.LevelOne)
 		{
-			if (level != 0)
-			{
-				g2.setColor(Color.black);
-				g2.fillRect(0, 0, width, height);			
-			}
-			gameObjectHandler.render(g2,false);
+			g2.setColor(Color.black);
+			g2.fillRect(0, 0, width, height);			
 		}
+		
+		gameObjectHandler.render(g2,false);
+		
 		if(currTransition != null)
-		{
 			currTransition.render(g2);
 		
-		}
 		
 		
 		bs.show();
@@ -250,5 +264,29 @@ public class Main extends Canvas{
 	
 	}
 	
+	public static void changeState(GameState newState)
+	{
+		if (!validStateTransition(newState))
+			return;
+		
+		if (newState == GameState.LevelOneTitle)
+		{
+			levelLoader.loadLevel(GameState.LevelOneTitle);
+			currTransition = new FadeTransition(Color.black,1500,"in");
+		}
+		else if (newState == GameState.LevelOne)
+		{
+			levelLoader.loadLevel(GameState.LevelOne);
+			currTransition = new FadeTransition(Color.black,1,"in");
+		}
+		
+		
+		state = newState;
+	}
+	
+	private static boolean validStateTransition(GameState newstate)
+	{
+		return true;
+	}
 
 }

@@ -34,9 +34,13 @@ public class FadeTransition extends Transition {
 	{
 		long now = System.currentTimeMillis();
 		long deltaTime = now - lastTime;
-		float fraction = (float)deltaTime/totalTime;
+		deltaTime = 10;
+		float fraction = ((float)deltaTime)/totalTime;
+//		System.out.println("totalTime: " + totalTime);
+//		System.out.println("delta/total: " + fraction);
+//		System.out.println("----------");
 		currAlpha = GameObject.lerp(currAlpha, endAlpha, fraction  , false);
-
+		
 		if (GameObject.floatEq(currAlpha, endAlpha, 0.05f))
 			done = true;
 		if (currAlpha > endAlpha)
