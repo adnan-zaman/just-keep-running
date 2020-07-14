@@ -1,6 +1,7 @@
 package com.az.jkr;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 /**
@@ -19,6 +20,13 @@ public abstract class MovingGameObject extends GameObject {
 	protected float jumpForce;
 	//forward direction
 	protected int forwardX;
+	//what horizontal direction game obj is moving in
+	protected boolean left, right;
+	//set to true after a walljump
+	protected boolean wallJumped;
+	//turn walljumped off after some time
+	//to return horizontal movement control
+	protected Coroutine wallJumpOff;
 
 
 	public MovingGameObject(float x, float y, float width, float height, ID id, Color c) {
@@ -33,6 +41,9 @@ public abstract class MovingGameObject extends GameObject {
 		super(x, y, width, height, id, c);
 		this.maxSpeedX = maxSpeedX;
 		this.jumpForce = jumpForce;
+		left = false;
+		right = false;
+		wallJumpOff = new Coroutine(wallJumpTime, () -> {wallJumped = false;});
 	}
 	
 	/**
@@ -96,13 +107,121 @@ public abstract class MovingGameObject extends GameObject {
 		collider = r;
 	}
 	
+	/**
+	 * (Need colliders and animations set to work)
+	 * 
+	 * Convenience method to be used game objects
+	 * with simple singular rectangle colliders.
+	 * 
+	 * Sets collider to the collider that
+	 * corresponds with the current animation state
+	 * and updates collider.
+	 */
+	protected void rectUpdateCollider()
+	{
+		//From colliderMap, query the list corresponding to the current anim state
+		//then get the rectangle at the index corresponding to the current frame
+		//of animation
+		Rectangle r = (Rectangle)colliderMap.get(getAnimator().getAnimState())
+				.get(getAnimator().getCurrentFrameNumber());
+		
+		rectSetCollider(r);
+	}
+	
+	/**
+	 * Convenience method that checks whether this game object
+	 * intersects another game object that's represented as a Rectangle2D
+	 * 
+	 * @param other the other game object
+	 * @return true if collide, false otherwise
+	 */
+	protected boolean simpleRectIntersect(GameObject other)
+	{
+		return getCollider().intersects(other.getCollider().getBounds2D());	
+	}
+	
+	/**
+	 * Convenience method that renders a game object's sprite
+	 * accounting for the fact that it's collider is most likely
+	 * shorter than the sprite, and that the collider is slightly
+	 * in the ground.
+	 * 
+	 * @param g2 the Graphics2D context
+	 */
+	protected void standingOnGroundRender(Graphics2D g2)
+	{
+		/*
+		 * gameobject's position is at the center of the gameobject
+		 * however the collider height will most often be shorter than
+		 * the sprite height. therefore if we draw the sprite using this
+		 * x,y position, the sprite will appear to be in the ground
+		 * so we move additionally move the sprite up by the difference
+		 * between spriteHeight and getHeight (delta) so that the sprite's
+		 * bottom is on the ground.
+		 */
+		int spriteDelta = 0;
+		if (getSpriteHeight() > getHeight())
+			spriteDelta = (int)(getSpriteHeight()/2 - getHeight()/2);
+		
+		//also offset by collisionOffset since colliders are always slightly in ground to maintain collision
+		Main.camera.drawSprite(g2, getAnimator().getSprite(), 
+			getX()-getSpriteWidth()/2, 
+			getY()-getSpriteHeight()/2 - spriteDelta - CollisionHandler.collisionOffset, 
+			getForwardX() == -1,
+			false);
+	}
+	
+	/**
+	 * Causes the game object to jump if possible,
+	 * otherwise does nothing.
+	 * May be a wall jump if game object is on wall.
+	 */
+	protected void jump()
+	{
+		//regular jump
+		if (isOnGround())
+		{
+			setOnGround(false);
+			setVelY(jumpForce);
+		}
+		//wall jump
+		else if (isOnWall() && !isOnGround())
+		{
+			setVelY(jumpForce);
+			left = !left;
+			right = !right;	
+			setWallJumped(true);
+			//regain horizontal control after some time
+			wallJumpOff.start();
+		}
+	
+	}
+	
 	
 	//getters and setters
 	
 	
+	@Override
+	public void setOnGround(boolean onGround)
+	{
+		
+		super.setOnGround(onGround);
+		
+		//if player has reached the ground and has walljumped
+		if (isOnGround() && hasWallJumped())
+		{
+			//this is so that horizontal movement after
+			//a walljump doesn't continue when you've hit the ground
+			left = false;
+			right = false;
+			setWallJumped(false);
+		}
+	}
+	
 	public float getMaxSpeedX() {
 		return maxSpeedX;
 	}
+	
 
 	protected int getForwardX() {
 		return forwardX;
@@ -111,5 +230,16 @@ public abstract class MovingGameObject extends GameObject {
 	protected void setForwardX(int forwardX) {
 		this.forwardX = forwardX;
 	}
+	
+	protected boolean hasWallJumped() {
+		return wallJumped;
+	}
+
+	protected void setWallJumped(boolean wallJumped) {
+		this.wallJumped = wallJumped;
+	}
+	
+	
+
 
 }

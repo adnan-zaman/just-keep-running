@@ -101,8 +101,7 @@ public class Main extends Canvas{
 		level = lvl;
 	
 		levelLoader.loadLevel(lvl);
-		if (lvl == 1)
-			currTransition = new FadeTransition(Color.black,2000,"in");
+		
 	}
 
 	
