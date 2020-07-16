@@ -11,8 +11,8 @@ import java.awt.Rectangle;
 
 public abstract class MovingGameObject extends GameObject {
 
-	//how long a walljump locks horizontal movement
-	protected final long wallJumpTime = 250;
+	//how long a walljump locks horizontal movement (in milliseconds)
+	protected final long wallJumpTime = 400;
 	
 	//max horizontal speed
 	protected float maxSpeedX;

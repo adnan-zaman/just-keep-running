@@ -112,9 +112,12 @@ public class CollisionHandler
 					checkAgainst = staticObjects[staticObjects.length - j];
 					
 				}
-					
-			
-				if (dynamicObjects[i].intersects(checkAgainst))
+				
+				//only bother checking intersection if objects are close enough to each other
+				if (GameObject.getDistance(dynamicObjects[i], checkAgainst) <=
+						Math.max(dynamicObjects[i].getHeight(), dynamicObjects[i].getWidth()) +
+						Math.max(checkAgainst.getHeight(), checkAgainst.getWidth()) &&
+						dynamicObjects[i].intersects(checkAgainst))
 				{
 					
 					toResolve.add(new CollisionInfo(dynamicObjects[i], checkAgainst));
@@ -126,9 +129,15 @@ public class CollisionHandler
 					
 					noCollisions = false;
 				}
+				
+				else
+				{
+					checkAgainst.setColor(Color.blue);
+				}
+				
 						
 			}
-
+			
 			//game object i hasn't collided with anything
 			//nor has anything collided with it
 			//therefore must be in the air
@@ -142,7 +151,6 @@ public class CollisionHandler
 			noCollisions = true;
 			offset++;
 		}
-		
 		//resolve everything that needs to be resolved
 		for (CollisionInfo ci : toResolve)
 			resolveCollisions(ci.obj1, ci.obj2);
