@@ -108,8 +108,9 @@ public class CollisionHandler
 				if (j < dynamicObjects.length)
 					checkAgainst = dynamicObjects[j];
 				else
-				{
-					checkAgainst = staticObjects[staticObjects.length - j];
+				{	
+					
+					checkAgainst = staticObjects[j - dynamicObjects.length];
 					
 				}
 				

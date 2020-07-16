@@ -11,4 +11,5 @@ public enum ID {
 	Player,
 	Wall,
 	UI,
+	BasicRunner
 }

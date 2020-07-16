@@ -60,7 +60,9 @@ public class LevelLoader {
 						}
 						//player
 						else if (curr == 'p')
-							Main.gameObjectHandler.addGameObject(new Player(x,y));					
+							Main.gameObjectHandler.addGameObject(new Player(x,y));	
+						else if (curr == 'e')
+							Main.gameObjectHandler.addGameObject(new BasicRunner(x,y));
 						x += 64;
 					}
 					x = 0;
