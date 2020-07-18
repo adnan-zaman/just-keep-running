@@ -199,20 +199,88 @@ public class CollisionHandler
 		//either dynObj's x or y will be changed
 		//target will contain the new location
 		float target = 0;
+		String dir = getCollisionDirection(dynObj,statObj);
+		
+		//dynObj is left of statObj
+		if (dir.equals("left"))
+		{
+			target = statObj.getX() - statObj.getWidth()/2;
+			dynObj.setX(target - dynObj.getWidth()/2);
+			dynObj.setOnWall(true);
+		}
+		//dynObj is right of statObj
+		else if (dir.equals("right"))
+		{
+			target = statObj.getX() + statObj.getWidth()/2;
+			dynObj.setX(target + dynObj.getWidth()/2 + 1);
+			dynObj.setOnWall(true);
+		}
+
+		//dynObj is top of statObj
+		else if (dir.equals("top") && statObj.isGround())	
+		{
+			if (statObj.isGround)
+				dynObj.setOnGround(true);
+			
+				
+			target = statObj.getY() - statObj.getHeight()/2;
+			//+1 becuase top static-dyn collisions can be interpreted as dynamic objects
+			//touching feet to "ground" in some way
+			//therefore, we want them to always be touching the ground
+			//(this makes sure onGround will remain true during checkCollisions()
+			dynObj.setY(target - dynObj.getHeight()/2 + collisionOffset);
+		}
+		//dynObj is bottom of statObj
+		else if (dir.equals("bottom") && statObj.isCeiling())
+		{
+			target = statObj.getY() + statObj.getHeight()/2;
+			dynObj.setY(target + dynObj.getHeight()/2);
+			
+			//stop upwards movement
+			//this is to prevent dynObjs jumping, hitting a ceiling
+			//but still hanging in the air
+			if (dynObj.getVelY() < 0)
+				dynObj.setVelY(0);
+		}
+		
+	
+	}
+	
+	/**
+	 * Collision resolution between two dynamic game objects
+	 * @param 	dynObj	game object
+	 * @param 	statObj	other game object
+	 */
+	private void dynamicDynamicResolve(GameObject a, GameObject b)
+	{
+		
+	}
+	
+	
+
+	/**
+	 * What side of game object b is game object a colliding with
+	 * 
+	 * @param a the game object in question
+	 * @param b the reference game object
+	 * @return left,right,up or down depending on a's orientation to b
+	 * 		   e.g, left means a is to the left of b
+	 */
+	public static String getCollisionDirection(GameObject a, GameObject b)
+	{
+		String s = "";
 		
 		//direction of static obj to dynamic obj
-		float[] statToDyn = GameObject.getDirection(statObj, dynObj);
+		float[] bToA = GameObject.getDirection(b, a);
 		
-		float largerSide = Math.max(statObj.getWidth(), statObj.getHeight());
+		float largerSide = Math.max(b.getWidth(), b.getHeight());
 		
 		//multiply by largerSide to guarantee the line has a magnitude that will reach outside the shape
 		//add to statObj's pos to get coordinates 
-		float[] endPoint = {statObj.getX() + (statToDyn[0] * largerSide), statObj.getY() + (statToDyn[1] * largerSide)};
+		float[] endPoint = {b.getX() + (bToA[0] * largerSide), b.getY() + (bToA[1] * largerSide)};
 		
 		//slope of the line between statObj and endPoint
-		float slope = (endPoint[1] - statObj.getY()) / (endPoint[0] - statObj.getX());
-
-		
+		float slope = (endPoint[1] - b.getY()) / (endPoint[0] - b.getX());
 		
 		//horizontal collision
 		/*
@@ -232,70 +300,32 @@ public class CollisionHandler
 		 * 
 		 * which side (left or right) is determined by endPoint's x value
 		 */
-		if (slope * (statObj.getWidth()/2) <= statObj.getHeight()/2 && 
-			slope * (statObj.getWidth()/2) >= -statObj.getHeight()/2)
+		if (slope * (b.getWidth()/2) <= b.getHeight()/2 && 
+			slope * (b.getWidth()/2) >= -b.getHeight()/2)
 		{
-			
-			//dynObj is touching a wall if it's a horizontal collision
-			dynObj.setOnWall(true);
-			//right collision
-			if (endPoint[0] < statObj.getX())
-			{
-				target = statObj.getX() - statObj.getWidth()/2;
-				dynObj.setX(target - dynObj.getWidth()/2);
-			}
-			//left collision
-			else if (endPoint[0] > statObj.getX())
-			{
-				target = statObj.getX() + statObj.getWidth()/2;
-				dynObj.setX(target + dynObj.getWidth()/2 + 1);
-			}
-
+		
+			//a is left of b
+			if (endPoint[0] < b.getX())
+				s = "left";
+			//a is right of b
+			else if (endPoint[0] > b.getX())
+				s = "right";		
 		}
 		
 		//if it's not a horizontal collision, it's a vertical collision
 		else
-		{
-				
-				//top collision
-				if (endPoint[1] < statObj.getY() && statObj.isGround())	
-				{
-					if (statObj.isGround)
-						dynObj.setOnGround(true);
-					
-						
-					target = statObj.getY() - statObj.getHeight()/2;
-					//+1 becuase top static-dyn collisions can be interpreted as dynamic objects
-					//touching feet to "ground" in some way
-					//therefore, we want them to always be touching the ground
-					//(this makes sure onGround will remain true during checkCollisions()
-					dynObj.setY(target - dynObj.getHeight()/2 + collisionOffset);
-
-				}
-				//bottom collision
-				else if (endPoint[1] > statObj.getY() && statObj.isCeiling())
-				{
-					target = statObj.getY() + statObj.getHeight()/2;
-					dynObj.setY(target + dynObj.getHeight()/2);
-					
-					//stop upwards movement
-					//this is to prevent dynObjs jumping, hitting a ceiling
-					//but still hanging in the air
-					if (dynObj.getVelY() < 0)
-						dynObj.setVelY(0);
-				}
+		{	
+			//a is top of b
+			if (endPoint[1] < b.getY())	
+				s = "top";
+			//a is bottom of b
+			else
+				s = "bottom";
 		}
+		
+		return s;
 	}
 	
-	/**
-	 * Collision resolution between two dynamic game objects
-	 * @param 	dynObj	game object
-	 * @param 	statObj	other game object
-	 */
-	private void dynamicDynamicResolve(GameObject a, GameObject b)
-	{
-		
-	}
 	
 	
 	

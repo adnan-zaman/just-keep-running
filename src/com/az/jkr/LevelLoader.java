@@ -58,6 +58,7 @@ public class LevelLoader {
 							w.isGround = true;
 							Main.gameObjectHandler.addGameObject(w);
 						}
+					
 						//player
 						else if (curr == 'p')
 							Main.gameObjectHandler.addGameObject(new Player(x,y));	

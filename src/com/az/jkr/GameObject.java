@@ -60,6 +60,7 @@ public abstract class GameObject {
 	 * neither -> no vertical collision check (for walls, this is so dynamic objecs don't get stuck in them when moving up/down against a wall)
 	 */
 	protected boolean isGround, isCeiling;
+
 	//this object's current collider
 	protected Shape collider;
 	//mapping from state -> list of colliders for that state
@@ -531,5 +532,7 @@ public abstract class GameObject {
 		this.isCeiling = isCeiling;
 	}
 	
+
+
 	
 }

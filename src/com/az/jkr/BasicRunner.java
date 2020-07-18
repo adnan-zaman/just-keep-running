@@ -56,25 +56,35 @@ public class BasicRunner extends Enemy {
 	
 	public void decide()
 	{
-		if (GameObject.getDirection(this, target)[0] < 0)
+		if (hasWallJumped())
 		{
-			left = true;
-			right = false;
-		}
-		else if (GameObject.getDirection(this, target)[0] > 0)
-		{
-			right = true;
-			left = false;
+			
 		}
 		else
 		{
-			left = false;
-			right = false;
+			if (GameObject.getDirection(this, target)[0] < 0)
+			{
+				left = true;
+				right = false;
+			}
+			else if (GameObject.getDirection(this, target)[0] > 0)
+			{
+				right = true;
+				left = false;
+			}
+			else
+			{
+				left = false;
+				right = false;
+			}
+			
+			
+			if (!frontSensor.isOnGround())
+				jump();
+			if (frontSensor.isOnWall())
+				jump();
 		}
 		
-		
-		if (!frontSensor.isOnGround())
-			jump();
 		
 	}
 	

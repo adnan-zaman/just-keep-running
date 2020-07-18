@@ -24,6 +24,8 @@ public abstract class MovingGameObject extends GameObject {
 	protected boolean left, right;
 	//set to true after a walljump
 	protected boolean wallJumped;
+	//set to true after a regular jump
+	protected boolean jumped;
 	//turn walljumped off after some time
 	//to return horizontal movement control
 	protected Coroutine wallJumpOff;
@@ -107,6 +109,7 @@ public abstract class MovingGameObject extends GameObject {
 		collider = r;
 	}
 	
+
 	/**
 	 * (Need colliders and animations set to work)
 	 * 
@@ -183,6 +186,7 @@ public abstract class MovingGameObject extends GameObject {
 		{
 			setOnGround(false);
 			setVelY(jumpForce);
+			setJumped(true);
 		}
 		//wall jump
 		else if (isOnWall() && !isOnGround())
@@ -216,6 +220,7 @@ public abstract class MovingGameObject extends GameObject {
 			right = false;
 			setWallJumped(false);
 		}
+		setJumped(false);
 	}
 	
 	public float getMaxSpeedX() {
@@ -223,7 +228,7 @@ public abstract class MovingGameObject extends GameObject {
 	}
 	
 
-	protected int getForwardX() {
+	public int getForwardX() {
 		return forwardX;
 	}
 
@@ -231,13 +236,22 @@ public abstract class MovingGameObject extends GameObject {
 		this.forwardX = forwardX;
 	}
 	
-	protected boolean hasWallJumped() {
+	public boolean hasWallJumped() {
 		return wallJumped;
 	}
 
 	protected void setWallJumped(boolean wallJumped) {
 		this.wallJumped = wallJumped;
 	}
+	
+	public boolean hasJumped() {
+		return jumped;
+	}
+
+	protected void setJumped(boolean jumped) {
+		this.jumped = jumped;
+	}
+
 	
 	
 
