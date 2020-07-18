@@ -6,3 +6,10 @@ This project is saved as an Eclipse project.
 
 Enemies have been added into the game...and they can jump!
 ![enemy-jumping](media/jump.gif)
+
+## Currently working on
+
+Finishing enemy AI. Enemies should be able to:
+  * walljump
+  * jump over walls
+  
