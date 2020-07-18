@@ -145,7 +145,7 @@ public class BasicRunner extends Enemy {
 	{
 		try {
 			spriteWidth = spriteHeight = 64;
-			BufferedImage playerSheet = SpriteSheet.getSpriteSheet("player.png");
+			BufferedImage playerSheet = SpriteSheet.getSpriteSheet("enemy.png");
 			getAnimator().addAnimation("run", new Animation(playerSheet, 0, 9, spriteWidth, spriteHeight));
 			getAnimator().addAnimation("idle", new Animation(playerSheet, 10, 10, spriteWidth, spriteHeight));
 			getAnimator().addAnimation("fall", new Animation(playerSheet, 14, 16, spriteWidth, spriteHeight,false));
