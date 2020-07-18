@@ -11,5 +11,7 @@ public enum ID {
 	Player,
 	Wall,
 	UI,
-	BasicRunner
+	BasicRunner,
+	Empty,
+	Sensor
 }

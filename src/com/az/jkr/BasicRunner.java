@@ -16,10 +16,13 @@ import com.az.jkr.Player.PlayerState;
 public class BasicRunner extends Enemy {
 
 	
+	private Sensor frontSensor;
+	
 	public BasicRunner(float x, float y) 
 	{
-		super(x, y, 64, 64, 100, 6, -5, ID.BasicRunner, Color.red);
+		super(x, y, 64, 64, 100, 7, -5, ID.BasicRunner, Color.red);
 		target = Main.gameObjectHandler.player;
+		frontSensor = new Sensor(getX() + getWidth()/2 + 32,getY(),64,64);
 	}
 	
 	
@@ -43,7 +46,11 @@ public class BasicRunner extends Enemy {
 			setVelX(0);
 		}
 		
+		
 		super.tick();
+		frontSensor.clear();
+		frontSensor.setX(getX() + getForwardX() * (getWidth()/2 + 32));
+		frontSensor.setY(getY());
 	}
 	
 	
@@ -65,11 +72,22 @@ public class BasicRunner extends Enemy {
 			right = false;
 		}
 		
+		
+		if (!frontSensor.isOnGround())
+			jump();
+		
 	}
 	
 	@Override
 	public void render(Graphics2D g2) {
 		standingOnGroundRender(g2);
+	}
+	
+	@Override
+	public void debugRender(Graphics2D g2)
+	{
+		g2.setColor(Color.white);
+		Main.camera.drawRect(g2, (Rectangle)frontSensor.getCollider(), false);
 	}
 
 	@Override
@@ -80,6 +98,7 @@ public class BasicRunner extends Enemy {
 
 	@Override
 	protected boolean intersects(GameObject other) {
+		frontSensor.intersects(other);
 		return simpleRectIntersect(other);
 	}
 	

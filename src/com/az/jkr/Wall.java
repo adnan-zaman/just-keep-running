@@ -44,10 +44,6 @@ public class Wall extends GameObject{
 	public void debugRender(Graphics2D g2)
 	{
 		
-			g2.setColor(color.white);
-			Main.camera.drawString(g2, "" + GameObject.getDistance(this,Main.gameObjectHandler.player), getX()-20, getY()-15);
-			
-	
 			
 			//g2.drawLine((int)(getX() - getWidth()/2), (int)(getY() - getHeight()/2), 
 			//			(int)(getX() + getWidth()/2), (int)(getY() + getHeight()/2));
