@@ -22,15 +22,14 @@ public class BasicRunner extends Enemy {
 	{
 		super(x, y, 64, 64, 100, 7, -5, ID.BasicRunner, Color.red);
 		target = Main.gameObjectHandler.player;
-		frontSensor = new Sensor(getX() + getWidth()/2 + 32,getY(),64,64);
+		frontSensor = new Sensor(getX() + getWidth()/2 + 32,getY(),64,40);
 	}
 	
 	
 	@Override
 	public void tick()
 	{
-		frontSensor.setX(getX() + getForwardX() * (getWidth()/2 + 32));
-		frontSensor.setY(getY());
+		
 		decide();
 
 		if (left)
@@ -97,12 +96,12 @@ public class BasicRunner extends Enemy {
 	@Override
 	public void debugRender(Graphics2D g2)
 	{
-		g2.setColor(color.green);
-		Main.camera.drawRect(g2,(Rectangle)getCollider(), false);
-		g2.setColor(Color.white);
-		Main.camera.drawRect(g2, (Rectangle)frontSensor.getCollider(), false);
-		Main.camera.drawString(g2,"onWall: " + frontSensor.isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
-		Main.camera.drawString(g2,"onGround: " + frontSensor.isOnGround(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 20);
+//		g2.setColor(color.green);
+//		Main.camera.drawRect(g2,(Rectangle)getCollider(), false);
+//		g2.setColor(Color.white);
+//		Main.camera.drawRect(g2, (Rectangle)frontSensor.getCollider(), false);
+//		Main.camera.drawString(g2,"onWall: " + frontSensor.isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
+//		Main.camera.drawString(g2,"onGround: " + frontSensor.isOnGround(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 20);
 	}
 
 	@Override
@@ -115,6 +114,13 @@ public class BasicRunner extends Enemy {
 	protected boolean intersects(GameObject other) {
 		frontSensor.intersects(other);
 		return simpleRectIntersect(other);
+	}
+	
+	
+	public void updateSensor()
+	{
+		frontSensor.setX(getX() + getForwardX() * (getWidth()/2 + 32));
+		frontSensor.setY(getY()); 
 	}
 	
 	@Override

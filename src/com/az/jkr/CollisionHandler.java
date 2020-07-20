@@ -68,8 +68,6 @@ public class CollisionHandler
 		//set because we don't want a game object to be moved twice
 		//even if it collides twice, once should be fine
 		Set<CollisionInfo> toResolve = new HashSet<CollisionInfo>();
-		//game objects that are involved in a collision, used for changing onGround
-		Set<GameObject> haveCollided = new HashSet<GameObject>();
 		//change to false if there is a collision, used for changing onGround
 		boolean noCollisions = true;
 		//offset
@@ -120,15 +118,14 @@ public class CollisionHandler
 						Math.max(checkAgainst.getHeight(), checkAgainst.getWidth()) &&
 						dynamicObjects[i].intersects(checkAgainst))
 				{
-					
+					if (dynamicObjects[i] == Main.gameObjectHandler.player)
+						checkAgainst.setColor(Color.red);
 					toResolve.add(new CollisionInfo(dynamicObjects[i], checkAgainst));
-					haveCollided.add(dynamicObjects[i]);
-					//add second game object since collisions only "look forward"
-					//A checks collisions with B, but B doesnt check with A
-					haveCollided.add(checkAgainst);
+					//for the purpose of onGround we only care if
+					//dynObj hasnt touched any static
+					if (checkAgainst.isStatic)
+						noCollisions = false;				
 					
-					
-					noCollisions = false;
 				}
 				
 				else
@@ -138,17 +135,16 @@ public class CollisionHandler
 				
 						
 			}
-			
+//			System.out.println(haveCollided);
 			//game object i hasn't collided with anything
 			//nor has anything collided with it
 			//therefore must be in the air
-			if (noCollisions && !haveCollided.contains(dynamicObjects[i]))
+			if (noCollisions)
 			{
 				dynamicObjects[i].setColor(Color.red);
 				dynamicObjects[i].setOnGround(false);
 			}
 
-				
 			noCollisions = true;
 			offset++;
 		}
@@ -243,7 +239,8 @@ public class CollisionHandler
 				dynObj.setVelY(0);
 		}
 		
-	
+		if (dynObj instanceof BasicRunner)
+			((BasicRunner) dynObj).updateSensor();
 	}
 	
 	/**
