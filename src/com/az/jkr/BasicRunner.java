@@ -29,6 +29,8 @@ public class BasicRunner extends Enemy {
 	@Override
 	public void tick()
 	{
+		frontSensor.setX(getX() + getForwardX() * (getWidth()/2 + 32));
+		frontSensor.setY(getY());
 		decide();
 
 		if (left)
@@ -49,8 +51,7 @@ public class BasicRunner extends Enemy {
 		
 		super.tick();
 		frontSensor.clear();
-		frontSensor.setX(getX() + getForwardX() * (getWidth()/2 + 32));
-		frontSensor.setY(getY());
+		
 	}
 	
 	
@@ -79,10 +80,10 @@ public class BasicRunner extends Enemy {
 			}
 			
 			
-			if (!frontSensor.isOnGround())
-				jump();
-			if (frontSensor.isOnWall())
-				jump();
+//			if (!frontSensor.isOnGround())
+//				jump();
+//			if (frontSensor.isOnWall())
+//				jump();
 		}
 		
 		
@@ -96,8 +97,12 @@ public class BasicRunner extends Enemy {
 	@Override
 	public void debugRender(Graphics2D g2)
 	{
+		g2.setColor(color.green);
+		Main.camera.drawRect(g2,(Rectangle)getCollider(), false);
 		g2.setColor(Color.white);
 		Main.camera.drawRect(g2, (Rectangle)frontSensor.getCollider(), false);
+		Main.camera.drawString(g2,"onWall: " + frontSensor.isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
+		Main.camera.drawString(g2,"onGround: " + frontSensor.isOnGround(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 20);
 	}
 
 	@Override

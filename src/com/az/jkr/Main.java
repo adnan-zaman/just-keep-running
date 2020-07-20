@@ -235,7 +235,7 @@ public class Main extends Canvas{
 				g2.setColor(Color.black);
 				g2.fillRect(0, 0, width, height);			
 			}
-			gameObjectHandler.render(g2,false);
+			gameObjectHandler.render(g2,true);
 		}
 		if(currTransition != null)
 		{

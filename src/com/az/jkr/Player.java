@@ -2,13 +2,9 @@ package com.az.jkr;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 
 /**
@@ -105,8 +101,8 @@ public class Player extends MovingGameObject {
 		g2.setColor(Color.white);
 		Main.camera.drawRect(g2, new Rectangle((int)getX()-1,(int)getY(),3,3),false);
 //		Main.camera.drawString(g2,"(" + left + "," + right +")", (int)(getX() + getWidth()/2 + 10), (int)getY());
-		Main.camera.drawString(g2,"onWall: " + isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
-		Main.camera.drawString(g2,"onGround: " + isOnGround(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 20);
+//		Main.camera.drawString(g2,"onWall: " + isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
+//		Main.camera.drawString(g2,"onGround: " + isOnGround(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 20);
 	
 		g2.setColor(Color.white);
 	
@@ -116,7 +112,9 @@ public class Player extends MovingGameObject {
 	@Override
 	public void updateCollider() 
 	{
-		rectUpdateCollider();	
+		//rectUpdateCollider();	
+		Rectangle r = new Rectangle((int)getX(),(int)getY(),64,64);
+		rectSetCollider(r);
 	}
 	
 	

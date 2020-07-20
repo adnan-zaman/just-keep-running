@@ -77,9 +77,13 @@ public class Sensor extends GameObject {
 					setOnGround(true);
 				else if (other.isCeiling())
 					setOnCeiling(true);
-				//not ground or ceiling, so its a wall tile
-				else
+				String dir = CollisionHandler.getCollisionDirection(this, other);
+				if (dir.equals("left") || dir.equals("right"))
+				{
 					setOnWall(true);
+					other.setColor(Color.red);
+				}
+					
 			}
 		}
 		return collision;
