@@ -16,20 +16,22 @@ import com.az.jkr.Player.PlayerState;
 public class BasicRunner extends Enemy {
 
 	
-	private Sensor frontSensor;
+	private Sensor groundSensor;
+	private Sensor frontWallSensor;
 	
 	public BasicRunner(float x, float y) 
 	{
-		super(x, y, 64, 64, 100, 7, -5, ID.BasicRunner, Color.red);
+		super(x, y, 64, 64, 100, 5, -5, ID.BasicRunner, Color.yellow);
 		target = Main.gameObjectHandler.player;
-		frontSensor = new Sensor(getX() + getWidth()/2 + 32,getY(),64,40);
+		groundSensor = new Sensor(getX() + getWidth()/2 + 10,getY() + getHeight()/2,20,20);
+		frontWallSensor = new Sensor(getX() + getWidth()/2 + 10 + 48,getY(),160,20);
 	}
 	
 	
 	@Override
 	public void tick()
 	{
-		
+		updateSensors();
 		decide();
 
 		if (left)
@@ -49,13 +51,15 @@ public class BasicRunner extends Enemy {
 		
 		
 		super.tick();
-		frontSensor.clear();
-		
+		frontWallSensor.clear();
+		groundSensor.clear();
 	}
 	
 	
 	public void decide()
 	{
+		
+		float[] dirToTarget = GameObject.getDirection(this, target);
 		if (hasWallJumped())
 		{
 			
@@ -79,10 +83,10 @@ public class BasicRunner extends Enemy {
 			}
 			
 			
-//			if (!frontSensor.isOnGround())
-//				jump();
-//			if (frontSensor.isOnWall())
-//				jump();
+			if (!groundSensor.isOnGround() && !hasJumped() && dirToTarget[1] <= 0)
+				jump();
+			if (frontWallSensor.isOnWall() && !hasJumped())
+				jump();	
 		}
 		
 		
@@ -96,12 +100,12 @@ public class BasicRunner extends Enemy {
 	@Override
 	public void debugRender(Graphics2D g2)
 	{
-//		g2.setColor(color.green);
+//		g2.setColor(getColor());
 //		Main.camera.drawRect(g2,(Rectangle)getCollider(), false);
-//		g2.setColor(Color.white);
-//		Main.camera.drawRect(g2, (Rectangle)frontSensor.getCollider(), false);
-//		Main.camera.drawString(g2,"onWall: " + frontSensor.isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
-//		Main.camera.drawString(g2,"onGround: " + frontSensor.isOnGround(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 20);
+		g2.setColor(Color.white);
+		Main.camera.drawRect(g2, (Rectangle)groundSensor.getCollider(), false);
+		Main.camera.drawRect(g2, (Rectangle)frontWallSensor.getCollider(), false);
+	
 	}
 
 	@Override
@@ -112,15 +116,18 @@ public class BasicRunner extends Enemy {
 
 	@Override
 	protected boolean intersects(GameObject other) {
-		frontSensor.intersects(other);
+		frontWallSensor.intersects(other);
+		groundSensor.intersects(other);
 		return simpleRectIntersect(other);
 	}
 	
 	
-	public void updateSensor()
+	public void updateSensors()
 	{
-		frontSensor.setX(getX() + getForwardX() * (getWidth()/2 + 32));
-		frontSensor.setY(getY()); 
+		frontWallSensor.setX(getX() + getForwardX() * (getWidth()/2 + 10 + 128));
+		frontWallSensor.setY(getY()); 
+		groundSensor.setX(getX() + getForwardX() * (getWidth()/2 + 10));
+		groundSensor.setY(getY() + getHeight()/2); 
 	}
 	
 	@Override

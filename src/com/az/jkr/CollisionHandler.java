@@ -239,8 +239,7 @@ public class CollisionHandler
 				dynObj.setVelY(0);
 		}
 		
-		if (dynObj instanceof BasicRunner)
-			((BasicRunner) dynObj).updateSensor();
+	
 	}
 	
 	/**

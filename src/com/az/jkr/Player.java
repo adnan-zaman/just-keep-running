@@ -94,17 +94,17 @@ public class Player extends MovingGameObject {
 	public void debugRender(Graphics2D g2)
 	{
 
-		g2.setColor(Color.white);
-		g2.setColor(getColor());
-		g2.setColor(Color.green);
-		Main.camera.drawRect(g2, (Rectangle)getCollider(),false);
-		g2.setColor(Color.white);
-		Main.camera.drawRect(g2, new Rectangle((int)getX()-1,(int)getY(),3,3),false);
+//		g2.setColor(Color.white);
+//		g2.setColor(getColor());
+//		g2.setColor(Color.green);
+//		Main.camera.drawRect(g2, (Rectangle)getCollider(),false);
+//		g2.setColor(Color.white);
+//		Main.camera.drawRect(g2, new Rectangle((int)getX()-1,(int)getY(),3,3),false);
 //		Main.camera.drawString(g2,"(" + left + "," + right +")", (int)(getX() + getWidth()/2 + 10), (int)getY());
 //		Main.camera.drawString(g2,"onWall: " + isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
 //		Main.camera.drawString(g2,"onGround: " + isOnGround(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 20);
 	
-		g2.setColor(Color.white);
+
 	
 	
 	}

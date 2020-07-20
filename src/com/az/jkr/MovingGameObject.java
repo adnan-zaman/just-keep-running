@@ -211,16 +211,23 @@ public abstract class MovingGameObject extends GameObject {
 		
 		super.setOnGround(onGround);
 		
-		//if player has reached the ground and has walljumped
-		if (isOnGround() && hasWallJumped())
+		
+		if (isOnGround())
 		{
-			//this is so that horizontal movement after
-			//a walljump doesn't continue when you've hit the ground
-			left = false;
-			right = false;
-			setWallJumped(false);
+			setJumped(false);
+			//if player has reached the ground and has walljumped
+			if (hasWallJumped())
+			{
+				//this is so that horizontal movement after
+				//a walljump doesn't continue when you've hit the ground
+				left = false;
+				right = false;
+				setWallJumped(false);
+			}
+			
 		}
-		setJumped(false);
+
+		
 	}
 	
 	public float getMaxSpeedX() {
