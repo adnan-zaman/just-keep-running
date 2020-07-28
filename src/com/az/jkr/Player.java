@@ -112,9 +112,7 @@ public class Player extends MovingGameObject {
 	@Override
 	public void updateCollider() 
 	{
-		//rectUpdateCollider();	
-		Rectangle r = new Rectangle((int)getX(),(int)getY(),64,64);
-		rectSetCollider(r);
+		rectUpdateCollider();	
 	}
 	
 	
@@ -166,7 +164,7 @@ public class Player extends MovingGameObject {
 		
 		//while wallJumped is true, player moves in opposite
 		//direction of wall regardless of input
-		if (!hasWallJumped())
+		if (!horizontalLocked)
 		{
 			
 			//!right/!left is there so you can't go in the other direction

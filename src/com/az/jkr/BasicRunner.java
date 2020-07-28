@@ -6,8 +6,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import com.az.jkr.Player.PlayerState;
-
 /**
  * The simplest enemy of the game
  *
@@ -56,41 +54,9 @@ public class BasicRunner extends Enemy {
 	}
 	
 	
-	public void decide()
-	{
-		
-		float[] dirToTarget = GameObject.getDirection(this, target);
-		if (hasWallJumped())
-		{
-			
-		}
-		else
-		{
-			if (GameObject.getDirection(this, target)[0] < 0)
-			{
-				left = true;
-				right = false;
-			}
-			else if (GameObject.getDirection(this, target)[0] > 0)
-			{
-				right = true;
-				left = false;
-			}
-			else
-			{
-				left = false;
-				right = false;
-			}
-			
-			
-			if (!groundSensor.isOnGround() && !hasJumped() && dirToTarget[1] <= 0)
-				jump();
-			if (frontWallSensor.isOnWall() && !hasJumped())
-				jump();	
-		}
-		
-		
-	}
+	
+	
+	
 	
 	@Override
 	public void render(Graphics2D g2) {
@@ -103,8 +69,9 @@ public class BasicRunner extends Enemy {
 //		g2.setColor(getColor());
 //		Main.camera.drawRect(g2,(Rectangle)getCollider(), false);
 		g2.setColor(Color.white);
-		Main.camera.drawRect(g2, (Rectangle)groundSensor.getCollider(), false);
-		Main.camera.drawRect(g2, (Rectangle)frontWallSensor.getCollider(), false);
+		Main.camera.drawString(g2,"onWall: " + isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
+//		Main.camera.drawRect(g2, (Rectangle)groundSensor.getCollider(), false);
+//		Main.camera.drawRect(g2, (Rectangle)frontWallSensor.getCollider(), false);
 	
 	}
 
@@ -183,6 +150,105 @@ public class BasicRunner extends Enemy {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * AI decides what to do
+	 */
+	private void decide()
+	{
+		
+		float[] dirToTarget = GameObject.getDirection(this, target);
+		
+		if (isOnGround())
+		{
+			if (dirToTarget[0] < 0)
+				processInput("left");
+			else if (dirToTarget[0] > 0)
+				processInput("right");
+			else if (GameObject.floatEq(dirToTarget[0], 0))
+				processInput("stop");
+			
+			//wall ahead
+			if (frontWallSensor.isOnWall())
+				processInput("jump");
+			//gap ahead, target is not below
+			if (!groundSensor.isOnGround() && getElevation() <= 0)
+				processInput("jump");
+			//touching wall, jump over it
+			if (isOnWall())
+				processInput("jump");
+		}
+		else
+		{
+			
+			if (getElevation() <= 0)
+			{
+				if (isOnWall())
+					processInput("jump");
+				
+				//left/right not changed allowing walljumps
+			}
+			else
+			{
+				if (dirToTarget[0] < 0)
+					processInput("left");
+				else if (dirToTarget[0] > 0)
+					processInput("right");
+				else if (GameObject.floatEq(dirToTarget[0], 0))
+					processInput("stop");
+			}
+		}
+	}
+	
+	/**
+	 * Given an input command, will set state of BasicRunner accordingly
+	 * 
+	 * @param inp the input
+	 */
+	private void processInput(String inp)
+	{
+		if (!horizontalLocked)
+		{
+			if (inp.equals("left"))
+			{
+				left = true;
+				right = false;
+			}
+			else if (inp.equals("right"))
+			{
+				right = true;
+				left = false;
+			}
+			else if (inp.equals("stop"))
+			{
+				left = false;
+				right = false;
+			}
+		}
+		
+		if (inp.equals("jump"))
+			jump();
+		
+	}
+	
+	/**
+	 * Returns an integer representing target's elevation
+	 * relative to BasicRunner. The possible outputs are
+	 * above, level and below. Since GameObjects' coordinates
+	 * are at their center and are different sizes, this could
+	 * lead to a "below" result even if both GameObjects are
+	 * essentially level. So, level means target.y is contained
+	 * within BasicRunner's height.
+	 * 
+	 * @return -1 = above, 0 = level, 1 = below
+	 */
+	private int getElevation()
+	{
+		float diff = target.getY() - getY();
+		if (diff <= 0)
+			return -1;
+		return 1;
 	}
 
 }

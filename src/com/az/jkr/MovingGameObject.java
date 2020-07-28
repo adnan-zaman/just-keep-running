@@ -26,9 +26,11 @@ public abstract class MovingGameObject extends GameObject {
 	protected boolean wallJumped;
 	//set to true after a regular jump
 	protected boolean jumped;
-	//turn walljumped off after some time
+	//whether or not horizontal movement is locked (after a walljump)
+	protected boolean horizontalLocked;
+	//turn lockHorizontal off after some time
 	//to return horizontal movement control
-	protected Coroutine wallJumpOff;
+	protected Coroutine regainHorizontal;
 
 
 	public MovingGameObject(float x, float y, float width, float height, ID id, Color c) {
@@ -45,7 +47,10 @@ public abstract class MovingGameObject extends GameObject {
 		this.jumpForce = jumpForce;
 		left = false;
 		right = false;
-		wallJumpOff = new Coroutine(wallJumpTime, () -> {wallJumped = false;});
+		wallJumped = false;
+		jumped = false;
+		horizontalLocked = false;
+		regainHorizontal = new Coroutine(wallJumpTime, () -> {horizontalLocked = false;});
 	}
 	
 	/**
@@ -59,6 +64,53 @@ public abstract class MovingGameObject extends GameObject {
 		y += velY;
 	}
 	
+	//getters and setters
+	
+	
+	public boolean hasWallJumped() {
+		return wallJumped;
+	}
+
+	@Override
+	public void setOnGround(boolean onGround)
+	{
+		
+		super.setOnGround(onGround);
+		
+		
+		if (isOnGround())
+		{
+			setJumped(false);
+			//if player has reached the ground and has walljumped
+			if (hasWallJumped())
+			{
+				//this is so that horizontal movement after
+				//a walljump doesn't continue when you've hit the ground
+				left = false;
+				right = false;
+				setWallJumped(false);
+			}
+			
+		}
+	
+		
+	}
+
+	public int getForwardX() {
+		return forwardX;
+	}
+
+	//getters and setters
+	
+	
+	public float getMaxSpeedX() {
+		return maxSpeedX;
+	}
+
+	public boolean hasJumped() {
+		return jumped;
+	}
+
 	/**
 	 * Utility method for subclasses.
 	 * Takes a rectangle, and updates width,height and positions
@@ -195,8 +247,9 @@ public abstract class MovingGameObject extends GameObject {
 			left = !left;
 			right = !right;	
 			setWallJumped(true);
+			horizontalLocked = true;
 			//regain horizontal control after some time
-			wallJumpOff.start();
+			regainHorizontal.start();
 		}
 	
 	}
@@ -205,56 +258,14 @@ public abstract class MovingGameObject extends GameObject {
 	//getters and setters
 	
 	
-	@Override
-	public void setOnGround(boolean onGround)
-	{
-		
-		super.setOnGround(onGround);
-		
-		
-		if (isOnGround())
-		{
-			setJumped(false);
-			//if player has reached the ground and has walljumped
-			if (hasWallJumped())
-			{
-				//this is so that horizontal movement after
-				//a walljump doesn't continue when you've hit the ground
-				left = false;
-				right = false;
-				setWallJumped(false);
-			}
-			
-		}
-
-		
-	}
-	
-	public float getMaxSpeedX() {
-		return maxSpeedX;
-	}
-	
-
-	public int getForwardX() {
-		return forwardX;
-	}
-
 	protected void setForwardX(int forwardX) {
 		this.forwardX = forwardX;
 	}
 	
-	public boolean hasWallJumped() {
-		return wallJumped;
-	}
-
 	protected void setWallJumped(boolean wallJumped) {
 		this.wallJumped = wallJumped;
 	}
 	
-	public boolean hasJumped() {
-		return jumped;
-	}
-
 	protected void setJumped(boolean jumped) {
 		this.jumped = jumped;
 	}
