@@ -157,6 +157,7 @@ public class BasicRunner extends Enemy {
 	
 
 	
+
 	/**
 	 * AI decides what to do
 	 */

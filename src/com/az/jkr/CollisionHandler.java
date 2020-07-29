@@ -168,8 +168,7 @@ public class CollisionHandler
 			dynamicStaticResolve(a,b);
 		else if (!a.isStatic && !b.isStatic)
 		{
-			//System.out.println("nice");
-			//dynamicDynamicResolve(a,b);
+			dynamicDynamicResolve(a,b);
 		}
 			
 		else
@@ -208,7 +207,7 @@ public class CollisionHandler
 		else if (dir.equals("right"))
 		{
 			target = statObj.getX() + statObj.getWidth()/2;
-			dynObj.setX(target + dynObj.getWidth()/2 + 1);
+			dynObj.setX(target + dynObj.getWidth()/2);
 			dynObj.setOnWall(true);
 		}
 
@@ -249,7 +248,70 @@ public class CollisionHandler
 	 */
 	private void dynamicDynamicResolve(GameObject a, GameObject b)
 	{
+
+		/*
+		 * Solution taken from: https://stackoverflow.com/questions/1585525/how-to-find-the-intersection-point-between-a-line-and-a-rectangle
+		 * by user: Joren
+		 */
 		
+		
+		//either a's x or y will be changed
+		//target will contain the new location
+		float target = 0;
+		/*unlike statDyn collision, we don't want to move a fully out of b
+		 * (then it'll appear as if b is always pushing a, even though both
+		 * are moving)
+		 * so, we'll calculate how much a was meant to move,
+		 * and move both a and b by half the amount.
+		 * this way, both GameObjects move.
+		 */
+		float dist = 0;
+		String dir = getCollisionDirection(a,b);
+		
+		//a is left of b
+		if (dir.equals("left"))
+		{
+			target = b.getX() - b.getWidth()/2;
+			dist = (target - a.getWidth()/2) - a.getX(); 
+			a.setX(a.getX() + dist/2);
+			b.setX(b.getX() - dist/2);		
+		}
+		//a is right of b
+		else if (dir.equals("right"))
+		{
+			target = b.getX() + b.getWidth()/2;
+			dist = (target - a.getWidth()/2) - a.getX(); 
+			a.setX(a.getX() + dist/2);
+			b.setX(b.getX() - dist/2);	
+		}
+
+		//a is top of b
+		else if (dir.equals("top"))	
+		{
+					
+			target = b.getY() - b.getHeight()/2;
+			dist = (target - a.getHeight()/2) - a.getY();
+			a.setY(a.getY() + dist/2);
+			b.setY(b.getY() - dist/2);	
+		}
+		//a is bottom of b
+		else if (dir.equals("bottom"))
+		{
+			target = b.getY() + b.getHeight()/2;
+			a.setY(target + a.getHeight()/2);
+			dist = (target - a.getHeight()/2) - a.getY();
+			a.setY(a.getY() + dist/2);
+			b.setY(b.getY() - dist/2);	
+			
+			//stop upwards movement
+			//this is to prevent as jumping, hitting a ceiling
+			//but still hanging in the air
+			if (a.getVelY() < 0)
+				a.setVelY(0);
+		}
+		
+	
+
 	}
 	
 	
