@@ -16,6 +16,7 @@ public class BasicRunner extends Enemy {
 	
 	private Sensor groundSensor;
 	private Sensor frontWallSensor;
+	String elev;
 	
 	public BasicRunner(float x, float y) 
 	{
@@ -23,6 +24,8 @@ public class BasicRunner extends Enemy {
 		target = Main.gameObjectHandler.player;
 		groundSensor = new Sensor(getX() + getWidth()/2 + 10,getY() + getHeight()/2,20,20);
 		frontWallSensor = new Sensor(getX() + getWidth()/2 + 10 + 48,getY(),160,20);
+		elev = "";
+		
 	}
 	
 	
@@ -69,7 +72,7 @@ public class BasicRunner extends Enemy {
 //		g2.setColor(getColor());
 //		Main.camera.drawRect(g2,(Rectangle)getCollider(), false);
 		g2.setColor(Color.white);
-		Main.camera.drawString(g2,"onWall: " + isOnWall(), (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
+		Main.camera.drawString(g2,"elev: " + elev, (int)(getX() + getWidth()/2 + 10), (int)getY() + 10);
 //		Main.camera.drawRect(g2, (Rectangle)groundSensor.getCollider(), false);
 //		Main.camera.drawRect(g2, (Rectangle)frontWallSensor.getCollider(), false);
 	
@@ -151,6 +154,8 @@ public class BasicRunner extends Enemy {
 			e.printStackTrace();
 		}
 	}
+	
+
 	
 	/**
 	 * AI decides what to do
@@ -245,10 +250,11 @@ public class BasicRunner extends Enemy {
 	 */
 	private int getElevation()
 	{
-		float diff = target.getY() - getY();
-		if (diff <= 0)
+		if (target.getY() < getY() - getHeight()/2)
 			return -1;
-		return 1;
+		if (target.getY() > getY() + getHeight()/2)
+			return 1;
+		return 0;
 	}
 
 }
