@@ -113,26 +113,15 @@ public class CollisionHandler
 				}
 				
 				//only bother checking intersection if objects are close enough to each other
-				if (GameObject.getDistance(dynamicObjects[i], checkAgainst) <=
-						Math.max(dynamicObjects[i].getHeight(), dynamicObjects[i].getWidth()) +
-						Math.max(checkAgainst.getHeight(), checkAgainst.getWidth()) &&
-						dynamicObjects[i].intersects(checkAgainst))
+				if (dynamicObjects[i].intersects(checkAgainst))
 				{
-					if (dynamicObjects[i] == Main.gameObjectHandler.player)
-						checkAgainst.setColor(Color.red);
 					toResolve.add(new CollisionInfo(dynamicObjects[i], checkAgainst));
 					//for the purpose of onGround we only care if
 					//dynObj hasnt touched any static
 					if (checkAgainst.isStatic)
-						noCollisions = false;				
-					
-				}
+						noCollisions = false;						
 				
-				else
-				{
-					checkAgainst.setColor(Color.blue);
 				}
-				
 						
 			}
 //			System.out.println(haveCollided);

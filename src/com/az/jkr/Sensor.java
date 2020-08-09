@@ -20,7 +20,7 @@ public class Sensor extends GameObject {
 	
 	//colliding with a ceiling tile
 	protected boolean onCeiling;
-	
+	public boolean one = false;
 
 	public Sensor(float x, float y, float width, float height)
 	{
@@ -80,7 +80,9 @@ public class Sensor extends GameObject {
 				String dir = CollisionHandler.getCollisionDirection(this, other);
 				if (dir.equals("left") || dir.equals("right"))
 				{
+					
 					setOnWall(true);
+					setColor(Color.red);
 					other.setColor(Color.red);
 				}
 					

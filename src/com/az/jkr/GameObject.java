@@ -40,6 +40,9 @@ public abstract class GameObject {
 	protected float width, height;
 	//how far game object is from surface of the ground (only meaningful if !isStatic)
 	protected float distFromGround;
+	//any gameobjects within this distance to this gameobject will be checked for collisions
+	//rest will be ignored
+	protected float checkDistance;
 	//width and height of sprite tiles
 	protected int spriteWidth, spriteHeight;
 	

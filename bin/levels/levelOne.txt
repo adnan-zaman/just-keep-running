@@ -2,11 +2,11 @@
 ...........g...g.............yyyygy...ygy...
 g..........x...x..g..............x.....x.....................................................................................!
 x..........c...c..x..g...ggggg...x.....x...............................................................................!
-xgg..ggg......p.e..x..c...xcccy....... x...................................................................................!
-x.x..xccg..yyy.yyyy......x...x...c.....c...............................................................................!
-x.x..x..x.....y.........y...y.........................................................
-ggx..........ggggggg................gggggggg.....ggggggg.....gggggggg.....gggggggg....ggggggggggggggggggggggggggggggggggxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx!
-gggggggggggggggggggggggg...........ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg!
+xgg..ggg........x..c...xcccy....... x...................................................................................!
+x.x..xccg..yyy.yyyy......x...x...c....................................................................................!
+x.x..x..x.....y.........g...y.......p...e......g......g..................................
+ggx..........ggggggg....x...c.......ggggggggggggggggggggggg.....gggggggg....ggggggggggggggggggggggggggggggggggxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx!
+ggggggggggggggggggggggggx..........ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg!
 gggggggggggg...........gg........gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg!
 gggggggggggg.gggggg.....ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg!
 gggggggggggg..............ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg!
