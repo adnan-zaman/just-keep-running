@@ -89,14 +89,6 @@ public class BasicRunner extends Enemy {
 	}
 
 
-	@Override
-	protected boolean intersects(GameObject other) {
-		frontWallSensor.intersects(other);
-		groundSensor.intersects(other);
-		return simpleRectIntersect(other);
-	}
-	
-	
 	public void updateSensors()
 	{
 		frontWallSensor.setX(getX() + getForwardX() * (getWidth()/2 + 128));
@@ -161,10 +153,25 @@ public class BasicRunner extends Enemy {
 			e.printStackTrace();
 		}
 	}
-	
+
+
+	@Override
+	protected boolean intersects(GameObject other) {
+		frontWallSensor.intersects(other);
+		groundSensor.intersects(other);
+		return simpleRectIntersect(other);
+	}
 
 	
-
+	@Override
+	public void setOnGround(boolean onGround)
+	{
+		if (hasWallJumped())
+			setKeepGoing(false);
+		super.setOnGround(onGround);
+		
+	}
+	
 	/**
 	 * AI decides what to do
 	 */
@@ -172,22 +179,34 @@ public class BasicRunner extends Enemy {
 	{
 		
 		float[] dirToTarget = GameObject.getDirection(this, target);
+		float distanceToTarget = GameObject.getDistance(this, target);
 		
 		if (isOnGround())
 		{
-			if (dirToTarget[0] < 0)
-				processInput("left");
-			else if (dirToTarget[0] > 0)
-				processInput("right");
-			else if (GameObject.floatEq(dirToTarget[0], 0))
-				processInput("stop");
+			//target is above or below, keep going in whatever direction you're going
+			//in hopes of finding a way to move up/down
+			if (getElevation() != 0 && GameObject.floatEq(dirToTarget[0], 0, 0.03f))
+				setKeepGoing(true);
+			//on equal footing, chase as normal
+			else if (getElevation() == 0)
+				setKeepGoing(false);
+		
+			//locks horizontal movement to whatever it was in hopes of finding
+			//a way up/down to target
+			if (!keepGoing())
+			{
+				if (dirToTarget[0] < 0)
+					processInput("left");
+				else if (dirToTarget[0] > 0)
+					processInput("right");
+				else if (getElevation() == 0 && GameObject.floatEq(dirToTarget[0], 0, 0.03f))
+					processInput("stop");
+			}
+			
 			
 			//wall ahead
 			if (frontWallSensor.isOnWall())
-			{
-				
 				processInput("jump");
-			}
 			//gap ahead, target is not below
 			if (!groundSensor.isOnGround() && getElevation() <= 0)
 				processInput("jump");
@@ -198,19 +217,18 @@ public class BasicRunner extends Enemy {
 		else
 		{
 			
-			if (getElevation() <= 0 && frontWallAboveSensor.isOnWall())
+			if (getElevation() <= 0)
 			{
-				if (isOnWall())
-				{
-					
+				
+				//this wall is greater than 1 block high so need to walljump
+				//or has already walljumped so continue the walljump chain
+				if (isOnWall() && frontWallAboveSensor.isOnWall() || hasWallJumped())
 					processInput("jump");
-					System.out.println("basRun: it jumepd");
-				}
-					
+			
 				
 				//left/right not changed allowing walljumps
 			}
-			else
+			else if (!horizontalLocked)
 			{
 				if (dirToTarget[0] < 0)
 					processInput("left");

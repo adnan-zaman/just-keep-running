@@ -30,6 +30,11 @@ public abstract class Enemy extends MovingGameObject {
 	protected ArrayList<Integer> waypointCycle;
 	//which waypoint are they heading towards
 	protected int currWaypoint;
+	//if set to true, enemy will keep moving in the horizontal
+	//direction they were already moving in (this is to stop
+	//enemy from essentially getting stuck if player is above/below
+	//them and enemy reaches player's x-coord
+	protected boolean keepGoing;
 	
 	public Enemy(float x, float y, float width, float height, ID id, Color c) {
 		this(x, y, width, height, 100, 5,id, c);
@@ -53,6 +58,14 @@ public abstract class Enemy extends MovingGameObject {
 	protected void nextWaypoint()
 	{
 		currWaypoint = (currWaypoint + 1) % waypointCycle.size();
+	}
+
+	protected boolean keepGoing() {
+		return keepGoing;
+	}
+
+	protected void setKeepGoing(boolean keepGoing) {
+		this.keepGoing = keepGoing;
 	}
 	
 
