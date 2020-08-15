@@ -13,9 +13,13 @@ import java.io.IOException;
 
 public class BasicRunner extends Enemy {
 
-	
+	 //detecting ground
 	private Sensor groundSensor;
-	private Sensor frontWallSensor;
+	//detecting wall ahead
+	private Sensor frontWallSensor; 
+	//detecting if wall that is being touched is >1 block tall
+	private Sensor thisWallAboveSensor; 
+	//detecting if there's an elevated wall ahead
 	private Sensor frontWallAboveSensor;
 
 	
@@ -25,7 +29,8 @@ public class BasicRunner extends Enemy {
 		target = Main.gameObjectHandler.player;
 		groundSensor = new Sensor(getX() + getWidth()/2 + 10,getY() + getHeight()/2,20,20);
 		frontWallSensor = new Sensor(getX() + getWidth()/2 + 128,getY(),20,20);
-		frontWallAboveSensor = new Sensor(getX() + getWidth()/2 - 10,getY(),20,20);
+		thisWallAboveSensor = new Sensor(getX() + getWidth()/2 - 10,getY(),20,20);
+		frontWallAboveSensor = new Sensor(getX() + getWidth()/2 + 128,getY() - getHeight()/2 - 20,20,20);
 		
 		
 		
@@ -57,7 +62,7 @@ public class BasicRunner extends Enemy {
 		super.tick();
 		frontWallSensor.clear();
 		groundSensor.clear();
-		frontWallAboveSensor.clear();
+		thisWallAboveSensor.clear();
 	}
 	
 	
@@ -79,6 +84,7 @@ public class BasicRunner extends Enemy {
 	
 		Main.camera.drawRect(g2, (Rectangle)groundSensor.getCollider(), false);
 		Main.camera.drawRect(g2, (Rectangle)frontWallSensor.getCollider(), false);
+		Main.camera.drawRect(g2, (Rectangle)thisWallAboveSensor.getCollider(), false);
 		Main.camera.drawRect(g2, (Rectangle)frontWallAboveSensor.getCollider(), false);
 	
 	}
@@ -95,8 +101,10 @@ public class BasicRunner extends Enemy {
 		frontWallSensor.setY(getY()); 
 		groundSensor.setX(getX() + getForwardX() * (getWidth()/2 + 10));
 		groundSensor.setY(getY() + getHeight()/2); 
-		frontWallAboveSensor.setX(getX() + getForwardX() * (getWidth()/2 + 10));
-		frontWallAboveSensor.setY(getY() - getHeight()/2 - 40);
+		thisWallAboveSensor.setX(getX() + getForwardX() * (getWidth()/2 + 10));
+		thisWallAboveSensor.setY(getY() - getHeight()/2 - 40);
+		frontWallAboveSensor.setX(getX() + getForwardX() * (getWidth()/2 + 128));
+		frontWallAboveSensor.setY(getY() - getHeight()/2 - 20);
 	}
 	
 	@Override
@@ -159,6 +167,8 @@ public class BasicRunner extends Enemy {
 	protected boolean intersects(GameObject other) {
 		frontWallSensor.intersects(other);
 		groundSensor.intersects(other);
+		thisWallAboveSensor.intersects(other);
+		frontWallAboveSensor.intersects(other);
 		return simpleRectIntersect(other);
 	}
 
@@ -205,7 +215,7 @@ public class BasicRunner extends Enemy {
 			
 			
 			//wall ahead
-			if (frontWallSensor.isOnWall())
+			if (frontWallSensor.isOnWall() || frontWallAboveSensor.isOnWall())
 				processInput("jump");
 			//gap ahead, target is not below
 			if (!groundSensor.isOnGround() && getElevation() <= 0)
@@ -222,7 +232,7 @@ public class BasicRunner extends Enemy {
 				
 				//this wall is greater than 1 block high so need to walljump
 				//or has already walljumped so continue the walljump chain
-				if (isOnWall() && frontWallAboveSensor.isOnWall() || hasWallJumped())
+				if (isOnWall() && thisWallAboveSensor.isOnWall() || hasWallJumped())
 					processInput("jump");
 			
 				
