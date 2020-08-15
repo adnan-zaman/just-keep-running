@@ -52,6 +52,11 @@ public abstract class Enemy extends MovingGameObject {
 		currWaypoint = 0;
 	}
 	
+	 /**
+	  * Sets this enemy's initial target
+	  */
+	public abstract void setInitialTarget();
+	
 	/**
 	 * Cycles through waypoints
 	 */

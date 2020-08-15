@@ -26,14 +26,16 @@ public class BasicRunner extends Enemy {
 	public BasicRunner(float x, float y) 
 	{
 		super(x, y, 64, 64, 100, 6f, -5, ID.BasicRunner, Color.yellow);
-		target = Main.gameObjectHandler.player;
 		groundSensor = new Sensor(getX() + getWidth()/2 + 10,getY() + getHeight()/2,20,20);
 		frontWallSensor = new Sensor(getX() + getWidth()/2 + 128,getY(),20,20);
 		thisWallAboveSensor = new Sensor(getX() + getWidth()/2 - 10,getY(),20,20);
-		frontWallAboveSensor = new Sensor(getX() + getWidth()/2 + 128,getY() - getHeight()/2 - 20,20,20);
-		
-		
-		
+		frontWallAboveSensor = new Sensor(getX() + getWidth()/2 + 128,getY() - getHeight()/2 - 20,20,20);	
+	}
+	
+	@Override
+	public void setInitialTarget()
+	{
+		target = Main.gameObjectHandler.player;
 	}
 	
 	
